@@ -7,6 +7,7 @@ public class Directive {
 
     public DirectiveType type;
     public String playBehavior;
+    public AudioItem audioItem;
 
     public Directive() {
         this.type = null;
