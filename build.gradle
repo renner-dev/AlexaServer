@@ -7,9 +7,6 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven {
-        url 'https://maven.icosillion.com/artifactory/open-source/'
-    }
 }
 
 dependencies {
@@ -18,4 +15,49 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.1'
     compile "org.reflections:reflections:0.9.11"
     compile 'com.icosillion.podengine:podengine:2.1'
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'dev.renner.alexa_server.Startup'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task copyJar(type: Copy) {
+    from 'build/libs/'
+    into 'build/dist/bin'
+    rename { "alexa-server.jar" }
+}
+
+task zipDist(type: Zip) {
+    from 'build/dist/'
+    include '*'
+    include '*/*' //to include contents of a folder present inside Reports directory
+    archiveName 'alexa-server.zip'
+    destinationDir(file('.'))
+}
+
+task dist {
+    fatJar.execute()
+    def distDir = new File('build/dist')
+    def binDir = new File('build/dist/bin')
+    def skillsDir = new File('build/dist/skills')
+    def confDir = new File('build/dist/conf')
+    def logDir = new File('build/dist/log')
+
+    distsDir.delete()
+
+    distsDir.mkdirs()
+    binDir.mkdirs()
+    skillsDir.mkdirs()
+    confDir.mkdirs()
+    logDir.mkdirs()
+
+    copyJar.execute()
+    zipDist.execute()
 }

@@ -5,7 +5,6 @@ import dev.renner.alexa_server.alexa.AlexaRequest;
 import dev.renner.alexa_server.alexa.AlexaResponse;
 import dev.renner.alexa_server.alexa.response.Intent;
 import dev.renner.alexa_server.alexa.response.OutputSpeechType;
-import dev.renner.alexa_server.intents.BasicIntent;
 import javafx.util.Pair;
 
 import java.lang.reflect.Method;
@@ -60,7 +59,7 @@ public class ResponseBuilder {
             System.out.println("Intent asked for: " + alexaRequest.request.intent.name + " | Current intent: " + intent.name());
             if (alexaRequest.request.intent.name.trim().equals(intent.name().trim())) {
                 try {
-                    BasicIntent basicIntent = (BasicIntent) intentClassPair.getKey().newInstance();
+                    Object basicIntent = intentClassPair.getKey().newInstance();
                     Method method = intentClassPair.getKey().getMethod(intent.executionMethod(), AlexaRequest.class);
                     alexaResponse = (AlexaResponse) method.invoke(basicIntent, alexaRequest);
                 } catch (Exception e) {

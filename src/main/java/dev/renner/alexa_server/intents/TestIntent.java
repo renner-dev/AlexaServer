@@ -9,9 +9,8 @@ import dev.renner.alexa_server.alexa.response.OutputSpeechType;
  * Created by renne on 27.06.2017.
  */
 @Intent(name = "test", executionMethod = "execute")
-public class TestIntent extends BasicIntent {
+public class TestIntent {
 
-    @Override
     public AlexaResponse execute(AlexaRequest request) {
 
         AlexaResponse alexaResponse = new AlexaResponse();
